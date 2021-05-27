@@ -1,14 +1,15 @@
 # BASE
 FROM registry.fedoraproject.org/fedora:34
 
-# COPY app configs
-WORKDIR /src
 ENV LC_ALL=en_US.UTF-8
-COPY ./_config/src/ ./
 
 # UPDATE BASE and land app frameworks and dependencies
-RUN yum update -y && \
-    yum install -y @development-tools \
+RUN mkdir -p /src && cd /src && \
+  curl https://raw.githubusercontent.com/kubevirt/kubevirt.github.io/master/_config/src/Gemfile -o Gemfile && \
+  curl https://raw.githubusercontent.com/kubevirt/kubevirt.github.io/master/_config/src/check_selectors.js -o check_selectors.js && \
+  cd && \
+  yum update -y && \
+  yum install -y @development-tools \
       langpacks-en glibc-all-langpacks redhat-rpm-config openssl-devel gcc-c++ \
       tar jq bzip2 \
       nodejs npm python37 python3-pip ruby ruby-devel rubygems rubygems-devel \
